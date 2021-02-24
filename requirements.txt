@@ -1,0 +1,4 @@
+SQLAlchemy
+PyAthena
+botocore==1.20.14
+awscli
