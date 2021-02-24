@@ -2,12 +2,9 @@ import http.client
 import json
 import time
 import sys
-
 from typing import Dict, List, Optional
 import logging
 import sqlalchemy
-import proxyfactory
-
 import config
 
 MOTHERSHIP = config.MOTHERSHIP
