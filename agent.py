@@ -133,6 +133,14 @@ class Agent:
 
 
 def main():
+    run_duration = 10
+    if len(sys.argv) > 1:
+      try:
+        run_duration = int(sys.argv[1])
+      except Exception as e:
+        print('exception parsiing run duration, will use default')
+
+    exit_by = time.time() + run_duration
     agent = Agent()
     while True:
         try:
@@ -143,5 +151,9 @@ def main():
 
         time.sleep(2)
 
+        if time.time() > exit_by:
+            break
+    print('exiting agent')
+
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
