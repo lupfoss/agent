@@ -117,7 +117,9 @@ class Agent:
         logger.info("running command locally")
         logger.info(self.qid)
         logger.info(self.dbquery)
-        return self.delegate.fetchall_dict(self.dbquery)
+        if self.dbquery:
+            return self.delegate.fetchall_dict(self.dbquery)
+        return None
 
     def post_command_result(self, result):
         # post
