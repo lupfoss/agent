@@ -13,6 +13,16 @@ DB_PARAMS = config.DB_PARAMS
 SQL_ERROR = "Unable to complete SQL: %.1000s %s %s"
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("agent.log"),
+        logging.StreamHandler()
+    ]
+)
+#logger.addHandler(logging.StreamHandler())
+#logger.setLevel(logging.DEBUG)
 
 class AgentDelegate:
 
@@ -87,12 +97,12 @@ class Agent:
 
         connection.request("GET", "/command")
         response = connection.getresponse()
-        print("Status: {} and reason: {}".format(response.status, response.reason))
+        logger.info("Status: {} and reason: {}".format(response.status, response.reason))
         text = response.read().decode('utf-8')
-        print(text)
+        logger.info(text)
         j = json.loads(text)
         dbquery = j['dbquery']
-        print(dbquery)
+        logger.info(dbquery)
 
         self.dbquery = dbquery
 
@@ -101,8 +111,8 @@ class Agent:
         return response
 
     def run_command(self, command):
-        print("running command locally")
-        print(self.dbquery)
+        logger.info("running command locally")
+        logger.info(self.dbquery)
         return self.delegate.fetchall_dict(self.dbquery)
 
     def post_command_result(self, result):
@@ -118,30 +128,46 @@ class Agent:
         conn.request('POST', '/post', json_data, headers)
 
         response = conn.getresponse()
-        print(response.read().decode())
+        logger.info(response.read().decode())
 
     def do_iteration(self):
-        print("asking for command")
+        logger.info("asking for command")
         command = self.get_next_command()
 
-        print("running command")
+        logger.info("running command")
         result = self.run_command(command)
-        print(result)
+        logger.info(result)
 
-        print("asking for command")
+        logger.info("asking for command")
         self.post_command_result(result)
 
 
 def main():
+    run_duration = 10
+    if len(sys.argv) > 1:
+      try:
+        run_duration = int(sys.argv[1])
+      except Exception as e:
+        logger.error('exception parsing run duration, will use default')
+
+    exit_by = time.time() + run_duration
+
     agent = Agent()
+
     while True:
         try:
             agent.do_iteration()
 
         except Exception as e:
-            print(e)
+            logger.error(e)
 
         time.sleep(2)
+
+        if time.time() > exit_by:
+            break
+
+    logger.info('exiting agent')
+
 
 if __name__ == "__main__":
     main()
