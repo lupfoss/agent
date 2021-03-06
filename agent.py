@@ -118,7 +118,11 @@ class Agent:
         logger.info(self.qid)
         logger.info(self.dbquery)
         if self.dbquery:
-            return self.delegate.fetchall_dict(self.dbquery)
+            try:
+                result = self.delegate.fetchall_dict(self.dbquery)
+            except Exception as e:
+                result = str(e)
+            return result
         return None
 
     def post_command_result(self, result):
