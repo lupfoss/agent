@@ -126,7 +126,8 @@ class Agent:
         return None
 
     def post_command_result(self, result):
-        # post
+        if not result:
+            return
 
         conn = http.client.HTTPConnection(MOTHERSHIP)
 
