@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 while true; do
-  git pull origin master
+  git pull origin main
   python3 -m virtualenv ~/.lupvenv
   source ~/lupvenv/bin/activate
   pip3 install -r requirements.txt
