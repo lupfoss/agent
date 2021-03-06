@@ -101,9 +101,12 @@ class Agent:
         text = response.read().decode('utf-8')
         logger.info(text)
         j = json.loads(text)
+        qid = j['uuid']
         dbquery = j['dbquery']
+        logger.info(qid)
         logger.info(dbquery)
 
+        self.qid = qid
         self.dbquery = dbquery
 
         connection.close()
@@ -112,6 +115,7 @@ class Agent:
 
     def run_command(self, command):
         logger.info("running command locally")
+        logger.info(self.qid)
         logger.info(self.dbquery)
         return self.delegate.fetchall_dict(self.dbquery)
 
@@ -122,7 +126,7 @@ class Agent:
 
         headers = {'Content-type': 'application/json'}
 
-        data = {'result': result}
+        data = {'uuid': self.qid, 'result': result}
         json_data = json.dumps(data)
 
         conn.request('POST', '/post', json_data, headers)
