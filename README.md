@@ -6,7 +6,7 @@ Recommend running this with a virtual environment
 
 ```
 pip3 install virtualenv
-python3 -m virtualenv ~/.lupenv
+python3 -m virtualenv ~/.lupvenv
 source ~/lupvenv/bin/activate
 ```
 
